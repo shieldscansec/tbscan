@@ -1,3 +1,5 @@
+# CRIADA POR NIGHT
+
 # TBSCAN
 
 TBSCAN é uma ferramenta de varredura de rede inspirada no Nmap, mas desenvolvida de forma independente e sem qualquer código do Nmap. Ela oferece funcionalidades avançadas para análise e mapeamento de redes.
@@ -44,12 +46,7 @@ python tbscan.py [opções]
 
 - Varredura básica:
   ```bash
-  python tbscan.py -t 192.168.1.0/24
-  ```
-
-- Varredura com detecção de sistema operacional:
-  ```bash
-  python tbscan.py -t 192.168.1.0/24 -os
+  python tbscan.py 192.168.1.1 -p 22 80 443 -sV
   ```
 
 ## Funcionalidades
