@@ -1,6 +1,6 @@
 # CRIADA POR NIGHT
 
-![Logo] (logo/logo.jpg)
+![Logo](logo/logo.jpg)
 
 # TBSCAN VERSÃO TESTE SEM A TRADUÇÃO
 
