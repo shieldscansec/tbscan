@@ -23,7 +23,7 @@ Para instalar o TBSCAN, siga os passos abaixo:
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seuusuario/tbscan.git
+   git clone https://github.com/BlackNight1884/tbscan.git
    ```
 2. Navegue até o diretório do projeto:
    ```bash
