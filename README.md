@@ -48,7 +48,7 @@ python tbscan.py [opções]
 
 - Varredura básica:
   ```bash
-  python tbscan.py 192.168.1.1 -p 22 80 443 -sV
+  python tbscan.py 192.168.1.1
   ```
 
 ## Funcionalidades
