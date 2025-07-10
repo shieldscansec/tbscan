@@ -137,7 +137,7 @@ Execute o comando `/painel-perguntasghost` para abrir o painel de configuração
 
 ## 🗄️ Estrutura do Banco de Dados
 
-O bot usa **SQLite** com as seguintes tabelas:
+O bot usa **better-sqlite3** (compatível com Termux) com as seguintes tabelas:
 
 - **server_configs**: Configurações por servidor
 - **form_questions**: Perguntas dos formulários
