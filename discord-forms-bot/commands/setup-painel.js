@@ -5,7 +5,7 @@ import { CONFIG } from '../config/constants.js';
 
 export const data = new SlashCommandBuilder()
     .setName('setup-painel')
-    .setDescription('Cria um painel de controle para gerenciar formulários facilmente')
+    .setDescription('Central de Controle - Sistema de Formulários Profissional')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function execute(interaction) {
@@ -19,31 +19,31 @@ export async function execute(interaction) {
             return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
         }
 
-        // Criar embed do painel de controle permanente
+        // Criar embed do painel de controle profissional
         const panelEmbed = {
             color: CONFIG.COLORS.PRIMARY,
-            title: `${CONFIG.EMOJIS.ADMIN} Central de Controle - Sistema de Formulários`,
-            description: `**${CONFIG.EMOJIS.CONFIG} Painel de Administração**\n\n${CONFIG.EMOJIS.INFO} Use os botões abaixo para gerenciar completamente o sistema de formulários do servidor.\n\n**${CONFIG.EMOJIS.ADMIN} Servidor:** ${interaction.guild.name}`,
+            title: `${CONFIG.EMOJIS.ADMIN} Central de Controle | Sistema de Formulários`,
+            description: `**Servidor:** ${interaction.guild.name}\n\n${CONFIG.EMOJIS.INFO} Gerencie todas as configurações do sistema de formulários através desta interface centralizada e profissional.`,
             fields: [
                 {
-                    name: `${CONFIG.EMOJIS.CONFIG} Configurações Principais`,
-                    value: `${CONFIG.EMOJIS.ADD} **Adicionar Pergunta** - Criar novas perguntas\n${CONFIG.EMOJIS.REMOVE} **Remover Pergunta** - Excluir perguntas existentes\n${CONFIG.EMOJIS.VIEW} **Ver Perguntas** - Listar todas as perguntas`,
+                    name: `${CONFIG.EMOJIS.FORM} Gerenciamento de Perguntas`,
+                    value: `${CONFIG.EMOJIS.ADD} Adicionar Pergunta\n${CONFIG.EMOJIS.REMOVE} Remover Pergunta\n${CONFIG.EMOJIS.VIEW} Visualizar Perguntas`,
                     inline: true
                 },
                 {
-                    name: `${CONFIG.EMOJIS.CONFIG} Sistema`,
-                    value: `${CONFIG.EMOJIS.CATEGORY} **Categoria de Logs** - Onde as submissões aparecem\n${CONFIG.EMOJIS.ROLE} **Configurar Cargos** - Cargos para aprovados/reprovados\n${CONFIG.EMOJIS.FORM} **Ativar Formulário** - Liberar para usuários`,
+                    name: `${CONFIG.EMOJIS.CONFIG} Configurações do Sistema`,
+                    value: `${CONFIG.EMOJIS.CATEGORY} Categoria de Logs\n${CONFIG.EMOJIS.ROLE} Configurar Cargos\n${CONFIG.EMOJIS.INFO} Status do Sistema`,
                     inline: true
                 },
                 {
-                    name: `${CONFIG.EMOJIS.INFO} Como Usar`,
-                    value: `Use os botões abaixo para gerenciar o sistema.\nTodos os controles estão organizados neste painel.\n\n${CONFIG.EMOJIS.SUCCESS} **Interface centralizada e prática!**`,
+                    name: `${CONFIG.EMOJIS.SUCCESS} Ativação`,
+                    value: `${CONFIG.EMOJIS.FORM} Ativar Formulário\n\n*Configure todas as opções antes de ativar*`,
                     inline: false
                 }
             ],
             timestamp: new Date().toISOString(),
             footer: {
-                text: `${CONFIG.EMOJIS.ADMIN} Painel de Controle - ${interaction.guild.name}`
+                text: `Sistema de Formulários Profissional • ${interaction.guild.name}`
             }
         };
 

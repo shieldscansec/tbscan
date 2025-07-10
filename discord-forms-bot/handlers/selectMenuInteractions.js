@@ -70,9 +70,9 @@ async function handleSelectLogCategory(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta
+        // Resposta discreta e privada
         await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Categoria **${category.name}** configurada!`, 
+            content: `${CONFIG.EMOJIS.SUCCESS} Categoria **${category.name}** configurada para logs!`, 
             ephemeral: true 
         });
         
@@ -112,9 +112,9 @@ async function handleSelectApprovedRole(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta
+        // Resposta discreta e privada
         await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **${role.name}** configurado para aprovados!`, 
+            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **@${role.name}** configurado para aprovados!`, 
             ephemeral: true 
         });
         
@@ -154,9 +154,9 @@ async function handleSelectRejectedRole(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta
+        // Resposta discreta e privada
         await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **${role.name}** configurado para reprovados!`, 
+            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **@${role.name}** configurado para reprovados!`, 
             ephemeral: true 
         });
         

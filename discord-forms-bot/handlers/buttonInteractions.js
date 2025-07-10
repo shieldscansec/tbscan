@@ -189,13 +189,13 @@ async function handleViewQuestions(interaction) {
 async function handleSetLogCategory(interaction) {
     const selectMenu = new ChannelSelectMenuBuilder()
         .setCustomId('select_log_category')
-        .setPlaceholder('Selecione a categoria para logs')
+        .setPlaceholder('Selecione a categoria para logs de formulários')
         .setChannelTypes(ChannelType.GuildCategory);
 
     const row = new ActionRowBuilder().addComponents(selectMenu);
     
     await interaction.reply({
-        content: `${CONFIG.EMOJIS.CATEGORY} **Configurar Categoria de Logs**\n\n${CONFIG.EMOJIS.INFO} Selecione a categoria onde as submissões de formulários serão enviadas para análise.\n\n${CONFIG.EMOJIS.WARNING} **Importante:** Certifique-se de que o bot tem permissão para enviar mensagens nesta categoria.`,
+        content: `${CONFIG.EMOJIS.CATEGORY} **Configurar Categoria de Logs**\n\n${CONFIG.EMOJIS.INFO} Selecione onde as submissões de formulários serão enviadas para análise.\n\n${CONFIG.EMOJIS.WARNING} **Importante:** O bot precisa de permissão para enviar mensagens na categoria.`,
         components: [row],
         ephemeral: true
     });
@@ -204,17 +204,17 @@ async function handleSetLogCategory(interaction) {
 async function handleSetRoles(interaction) {
     const selectMenuApproved = new RoleSelectMenuBuilder()
         .setCustomId('select_approved_role')
-        .setPlaceholder('Selecione o cargo para usuários aprovados');
+        .setPlaceholder('Cargo para usuários aprovados (obrigatório)');
 
     const selectMenuRejected = new RoleSelectMenuBuilder()
         .setCustomId('select_rejected_role')
-        .setPlaceholder('Selecione o cargo para usuários reprovados (opcional)');
+        .setPlaceholder('Cargo para usuários reprovados (opcional)');
 
     const row1 = new ActionRowBuilder().addComponents(selectMenuApproved);
     const row2 = new ActionRowBuilder().addComponents(selectMenuRejected);
     
     await interaction.reply({
-        content: `${CONFIG.EMOJIS.ROLE} **Configurar Sistema de Cargos**\n\n${CONFIG.EMOJIS.SUCCESS} **Cargo para Aprovados:** Obrigatório - será dado aos usuários aprovados\n${CONFIG.EMOJIS.WARNING} **Cargo para Reprovados:** Opcional - será dado aos usuários reprovados\n\n${CONFIG.EMOJIS.INFO} **Dica:** Configure primeiro o cargo obrigatório, depois o opcional.`,
+        content: `${CONFIG.EMOJIS.ROLE} **Configurar Sistema de Cargos**\n\n${CONFIG.EMOJIS.SUCCESS} **Aprovados:** Configure o cargo obrigatório\n${CONFIG.EMOJIS.WARNING} **Reprovados:** Configure o cargo opcional\n\n${CONFIG.EMOJIS.INFO} Selecione os cargos abaixo:`,
         components: [row1, row2],
         ephemeral: true
     });
@@ -234,6 +234,13 @@ async function handleStartForm(interaction) {
         questions = await database.getFormQuestions(interaction.guildId);
         if (questions) cache.setFormQuestions(interaction.guildId, questions);
     }
+
+    // Debug da configuração
+    console.log('🔍 Verificando configuração:', {
+        guildId: interaction.guildId,
+        config: config,
+        questionsCount: questions ? questions.length : 0
+    });
 
     // Verificar se está tudo configurado
     const missingItems = [];
@@ -261,7 +268,7 @@ async function handleStartForm(interaction) {
     const row = new ActionRowBuilder().addComponents(button);
 
     await interaction.reply({
-        content: `${CONFIG.EMOJIS.SUCCESS} **Formulário ativado!** Sistema pronto com **${questions.length}** pergunta(s).`,
+        content: `${CONFIG.EMOJIS.SUCCESS} **Sistema de Formulário ativado com sucesso!** Configurado com **${questions.length}** pergunta(s).`,
         embeds: [embed],
         components: [row]
     });

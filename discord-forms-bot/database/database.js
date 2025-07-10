@@ -63,7 +63,10 @@ class JSONDatabase {
 
     async updateServerConfig(guildId, config) {
         try {
-            const { logCategoryId, approvedRoleId, rejectedRoleId } = config;
+            // Aceitar tanto camelCase quanto snake_case para compatibilidade
+            const logCategoryId = config.log_category_id || config.logCategoryId;
+            const approvedRoleId = config.approved_role_id || config.approvedRoleId;
+            const rejectedRoleId = config.rejected_role_id || config.rejectedRoleId;
             
             this.data.serverConfigs[guildId] = {
                 guild_id: guildId,
@@ -75,6 +78,7 @@ class JSONDatabase {
             };
             
             await this.saveData();
+            console.log(`✅ Configuração salva para servidor ${guildId}:`, this.data.serverConfigs[guildId]);
             return 1; // Simula changes count
         } catch (error) {
             console.error('Erro ao atualizar configuração do servidor:', error);
@@ -198,15 +202,18 @@ class JSONDatabase {
             // Buscar perguntas relacionadas
             const questions = Object.values(this.data.formQuestions);
             
-            // Montar as respostas formatadas
-            const formattedAnswers = answers.map(answer => {
+            // Montar as respostas estruturadas
+            const structuredAnswers = answers.map(answer => {
                 const question = questions.find(q => q.id == answer.question_id);
-                return `${question?.question || 'Pergunta não encontrada'}: ${answer.answer}`;
-            }).join('\n\n');
+                return {
+                    question: question?.question || 'Pergunta não encontrada',
+                    answer: answer.answer
+                };
+            });
             
             return {
                 ...submission,
-                answers: formattedAnswers
+                answers: structuredAnswers
             };
         } catch (error) {
             console.error('Erro ao buscar submissão com respostas:', error);
