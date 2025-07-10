@@ -5,7 +5,7 @@ import { CONFIG } from '../config/constants.js';
 
 export const data = new SlashCommandBuilder()
     .setName('setup-painel')
-    .setDescription('Cria um painel de controle permanente para gerenciar formulários (use apenas uma vez)')
+    .setDescription('Cria um painel de controle para gerenciar formulários facilmente')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 export async function execute(interaction) {
@@ -37,13 +37,13 @@ export async function execute(interaction) {
                 },
                 {
                     name: `${CONFIG.EMOJIS.INFO} Como Usar`,
-                    value: `Este painel é **permanente** e ficará sempre disponível.\nVocê não precisa mais digitar comandos!\n\n${CONFIG.EMOJIS.SUCCESS} **Configure uma vez, use sempre!**`,
+                    value: `Use os botões abaixo para gerenciar o sistema.\nTodos os controles estão organizados neste painel.\n\n${CONFIG.EMOJIS.SUCCESS} **Interface centralizada e prática!**`,
                     inline: false
                 }
             ],
             timestamp: new Date().toISOString(),
             footer: {
-                text: `${CONFIG.EMOJIS.ADMIN} Painel de Controle Permanente - ${interaction.guild.name}`
+                text: `${CONFIG.EMOJIS.ADMIN} Painel de Controle - ${interaction.guild.name}`
             }
         };
 
@@ -97,21 +97,11 @@ export async function execute(interaction) {
                     .setStyle(ButtonStyle.Secondary)
             );
 
-        // Enviar painel permanente
+        // Enviar painel de controle
         await interaction.reply({
             embeds: [panelEmbed],
             components: [row1, row2, row3]
         });
-
-        // Confirmar criação do painel
-        setTimeout(async () => {
-            const successEmbed = createSuccessEmbed(
-                'Painel Criado com Sucesso!',
-                `${CONFIG.EMOJIS.SUCCESS} **Painel de controle permanente criado!**\n\n${CONFIG.EMOJIS.INFO} A partir de agora, você pode usar os botões acima para gerenciar o sistema de formulários.\n\n${CONFIG.EMOJIS.WARNING} **Importante:** Este painel é permanente. Você não precisa mais digitar comandos!`
-            );
-            
-            await interaction.followUp({ embeds: [successEmbed], ephemeral: true });
-        }, 1000);
 
     } catch (error) {
         console.error('Erro no comando setup-painel:', error);

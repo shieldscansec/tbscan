@@ -261,7 +261,7 @@ async function handleStartForm(interaction) {
     const row = new ActionRowBuilder().addComponents(button);
 
     await interaction.reply({
-        content: `${CONFIG.EMOJIS.SUCCESS} **Sistema de Formulários Ativado!**\n\n${CONFIG.EMOJIS.INFO} O formulário público foi criado com sucesso. Os usuários agora podem preencher e enviar suas inscrições usando o botão abaixo.\n\n${CONFIG.EMOJIS.ADMIN} **Configuração atual:**\n${CONFIG.EMOJIS.FORM} **${questions.length}** pergunta(s) configurada(s)\n${CONFIG.EMOJIS.CATEGORY} Logs configurados\n${CONFIG.EMOJIS.ROLE} Cargos configurados`,
+        content: `${CONFIG.EMOJIS.SUCCESS} **Formulário ativado!** Sistema pronto com **${questions.length}** pergunta(s).`,
         embeds: [embed],
         components: [row]
     });

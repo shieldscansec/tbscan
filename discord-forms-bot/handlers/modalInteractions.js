@@ -57,11 +57,11 @@ async function handleAddQuestionModal(interaction) {
             cache.invalidateServerCache(interaction.guildId);
         }
         
-        const successEmbed = createSuccessEmbed(
-            'Pergunta Adicionada',
-            `${CONFIG.EMOJIS.SUCCESS} **Pergunta adicionada com sucesso!**\n\n${CONFIG.EMOJIS.FORM} **Nova pergunta:**\n"${questionText}"\n\n${CONFIG.EMOJIS.INFO} A pergunta já está disponível para uso no formulário.`
-        );
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Resposta discreta
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} Pergunta adicionada: "${questionText.length > 50 ? questionText.substring(0, 50) + '...' : questionText}"`, 
+            ephemeral: true 
+        });
         
     } catch (error) {
         console.error('Erro ao adicionar pergunta:', error);
@@ -217,12 +217,11 @@ async function finalizeSubmission(interaction, submissionId) {
             }
         }
 
-        const successEmbed = createSuccessEmbed(
-            'Formulário Enviado com Sucesso!',
-            '✅ Suas respostas foram enviadas para análise.\n📨 Você receberá o resultado em breve.\n\n💡 **Dica:** Mantenha suas DMs abertas para receber notificações!'
-        );
-        
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Resposta discreta
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} **Formulário enviado!** Aguarde a análise da equipe.`, 
+            ephemeral: true 
+        });
 
     } catch (error) {
         console.error('Erro ao finalizar submissão:', error);

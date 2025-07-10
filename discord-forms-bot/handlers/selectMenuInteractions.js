@@ -1,5 +1,7 @@
 import { createSuccessEmbed, createErrorEmbed } from '../utils/embeds.js';
 import { isValidLogCategory, isValidRole } from '../utils/permissions.js';
+import { CONFIG } from '../config/constants.js';
+import { cache } from '../utils/cache.js';
 import database from '../database/database.js';
 
 export async function handleSelectMenuInteraction(interaction) {
@@ -58,24 +60,27 @@ async function handleSelectLogCategory(interaction) {
         // Buscar configuração atual
         const currentConfig = await database.getServerConfig(interaction.guildId);
         
-        // Atualizar configuração
+        // Atualizar configuração com nomes corretos
         await database.updateServerConfig(interaction.guildId, {
-            logCategoryId: categoryId,
-            approvedRoleId: currentConfig?.approved_role_id || null,
-            rejectedRoleId: currentConfig?.rejected_role_id || null
+            log_category_id: categoryId,
+            approved_role_id: currentConfig?.approved_role_id || null,
+            rejected_role_id: currentConfig?.rejected_role_id || null
         });
         
-        const successEmbed = createSuccessEmbed(
-            'Categoria Configurada',
-            `A categoria **${category.name}** foi definida como local para envio dos logs de formulários.`
-        );
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Invalidar cache para forçar atualização
+        cache.invalidateServerCache(interaction.guildId);
+        
+        // Resposta discreta
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} Categoria **${category.name}** configurada!`, 
+            ephemeral: true 
+        });
         
     } catch (error) {
         console.error('Erro ao configurar categoria:', error);
         const errorEmbed = createErrorEmbed(
-            'Erro de Banco de Dados',
-            'Não foi possível salvar a configuração. Tente novamente.'
+            'Erro de Configuração',
+            `${CONFIG.EMOJIS.ERROR} Não foi possível salvar a categoria. Tente novamente.`
         );
         await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
@@ -97,24 +102,27 @@ async function handleSelectApprovedRole(interaction) {
         // Buscar configuração atual
         const currentConfig = await database.getServerConfig(interaction.guildId);
         
-        // Atualizar configuração
+        // Atualizar configuração com nomes corretos
         await database.updateServerConfig(interaction.guildId, {
-            logCategoryId: currentConfig?.log_category_id || null,
-            approvedRoleId: roleId,
-            rejectedRoleId: currentConfig?.rejected_role_id || null
+            log_category_id: currentConfig?.log_category_id || null,
+            approved_role_id: roleId,
+            rejected_role_id: currentConfig?.rejected_role_id || null
         });
         
-        const successEmbed = createSuccessEmbed(
-            'Cargo de Aprovação Configurado',
-            `O cargo **${role.name}** será atribuído aos usuários aprovados no formulário.`
-        );
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Invalidar cache para forçar atualização
+        cache.invalidateServerCache(interaction.guildId);
+        
+        // Resposta discreta
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **${role.name}** configurado para aprovados!`, 
+            ephemeral: true 
+        });
         
     } catch (error) {
         console.error('Erro ao configurar cargo aprovado:', error);
         const errorEmbed = createErrorEmbed(
-            'Erro de Banco de Dados',
-            'Não foi possível salvar a configuração. Tente novamente.'
+            'Erro de Configuração',
+            `${CONFIG.EMOJIS.ERROR} Não foi possível salvar o cargo. Tente novamente.`
         );
         await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
@@ -136,24 +144,27 @@ async function handleSelectRejectedRole(interaction) {
         // Buscar configuração atual
         const currentConfig = await database.getServerConfig(interaction.guildId);
         
-        // Atualizar configuração
+        // Atualizar configuração com nomes corretos
         await database.updateServerConfig(interaction.guildId, {
-            logCategoryId: currentConfig?.log_category_id || null,
-            approvedRoleId: currentConfig?.approved_role_id || null,
-            rejectedRoleId: roleId
+            log_category_id: currentConfig?.log_category_id || null,
+            approved_role_id: currentConfig?.approved_role_id || null,
+            rejected_role_id: roleId
         });
         
-        const successEmbed = createSuccessEmbed(
-            'Cargo de Reprovação Configurado',
-            `O cargo **${role.name}** será atribuído aos usuários reprovados no formulário.`
-        );
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Invalidar cache para forçar atualização
+        cache.invalidateServerCache(interaction.guildId);
+        
+        // Resposta discreta
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **${role.name}** configurado para reprovados!`, 
+            ephemeral: true 
+        });
         
     } catch (error) {
         console.error('Erro ao configurar cargo reprovado:', error);
         const errorEmbed = createErrorEmbed(
-            'Erro de Banco de Dados',
-            'Não foi possível salvar a configuração. Tente novamente.'
+            'Erro de Configuração',
+            `${CONFIG.EMOJIS.ERROR} Não foi possível salvar o cargo. Tente novamente.`
         );
         await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
@@ -186,11 +197,18 @@ async function handleSelectQuestionToRemove(interaction) {
         // Remover a pergunta
         await database.removeFormQuestion(questionId);
         
-        const successEmbed = createSuccessEmbed(
-            'Pergunta Removida',
-            `A pergunta foi removida com sucesso:\n\n~~"${questionToRemove.question}"~~`
-        );
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        // Invalidar cache para forçar atualização
+        cache.invalidateServerCache(interaction.guildId);
+        
+        // Resposta discreta
+        const truncatedQuestion = questionToRemove.question.length > 50 
+            ? `${questionToRemove.question.substring(0, 50)}...` 
+            : questionToRemove.question;
+        
+        await interaction.reply({ 
+            content: `${CONFIG.EMOJIS.SUCCESS} Pergunta removida: "${truncatedQuestion}"`, 
+            ephemeral: true 
+        });
         
     } catch (error) {
         console.error('Erro ao remover pergunta:', error);
