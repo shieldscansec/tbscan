@@ -1,0 +1,46 @@
+{
+  "serverConfigs": {
+    "test-guild-456": {
+      "guild_id": "test-guild-456",
+      "log_category_id": "json-category",
+      "approved_role_id": "json-approved",
+      "rejected_role_id": "json-rejected",
+      "created_at": "2025-07-10T21:40:05.836Z",
+      "updated_at": "2025-07-10T21:40:05.837Z"
+    }
+  },
+  "formQuestions": {
+    "1": {
+      "id": 1,
+      "guild_id": "test-guild-456",
+      "question": "Pergunta JSON de teste?",
+      "order_index": 1,
+      "created_at": "2025-07-10T21:40:05.839Z"
+    }
+  },
+  "formSubmissions": {
+    "1": {
+      "id": 1,
+      "guild_id": "test-guild-456",
+      "user_id": "json-user-123",
+      "username": "JSONUser#5678",
+      "status": "pending",
+      "submitted_at": "2025-07-10T21:40:05.840Z",
+      "reviewed_at": null,
+      "reviewer_id": null
+    }
+  },
+  "formAnswers": {
+    "1": {
+      "id": 1,
+      "submission_id": 1,
+      "question_id": 1,
+      "answer": "Resposta JSON de teste"
+    }
+  },
+  "nextIds": {
+    "question": 2,
+    "submission": 2,
+    "answer": 2
+  }
+}
