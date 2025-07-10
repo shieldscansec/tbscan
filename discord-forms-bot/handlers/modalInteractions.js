@@ -1,5 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { createSuccessEmbed, createErrorEmbed, createSubmissionEmbed } from '../utils/embeds.js';
+import { CONFIG } from '../config/constants.js';
+import { cache } from '../utils/cache.js';
 import database from '../database/database.js';
 
 export async function handleModalSubmit(interaction) {
@@ -50,9 +52,14 @@ async function handleAddQuestionModal(interaction) {
     try {
         await database.addFormQuestion(interaction.guildId, questionText.trim());
         
+        // Invalidar cache para forçar atualização
+        if (cache) {
+            cache.invalidateServerCache(interaction.guildId);
+        }
+        
         const successEmbed = createSuccessEmbed(
             'Pergunta Adicionada',
-            `A pergunta foi adicionada com sucesso:\n\n**"${questionText}"**`
+            `${CONFIG.EMOJIS.SUCCESS} **Pergunta adicionada com sucesso!**\n\n${CONFIG.EMOJIS.FORM} **Nova pergunta:**\n"${questionText}"\n\n${CONFIG.EMOJIS.INFO} A pergunta já está disponível para uso no formulário.`
         );
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
         
@@ -60,7 +67,7 @@ async function handleAddQuestionModal(interaction) {
         console.error('Erro ao adicionar pergunta:', error);
         const errorEmbed = createErrorEmbed(
             'Erro de Banco de Dados',
-            'Não foi possível adicionar a pergunta. Tente novamente.'
+            `${CONFIG.EMOJIS.ERROR} Não foi possível adicionar a pergunta.\n\n${CONFIG.EMOJIS.INFO} Tente novamente ou entre em contato com o suporte.`
         );
         await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
