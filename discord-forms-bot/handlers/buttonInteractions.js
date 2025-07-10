@@ -226,106 +226,44 @@ async function handleSubmitForm(interaction) {
         return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
 
-    await interaction.deferReply({ ephemeral: true });
+    // Discord permite máximo 5 inputs por modal, então vamos dividir as perguntas se necessário
+    if (questions.length <= 5) {
+        // Se temos 5 ou menos perguntas, usar um modal único
+        await showFormModal(interaction, questions, 0);
+    } else {
+        // Se temos mais de 5 perguntas, usar múltiplos modais
+        await showFormModal(interaction, questions.slice(0, 5), 0);
+    }
+}
 
-    try {
-        // Criar submissão no banco
-        const submissionId = await database.createSubmission(
-            interaction.guildId,
-            interaction.user.id,
-            interaction.user.tag
-        );
+async function showFormModal(interaction, questions, startIndex) {
+    const isFirstModal = startIndex === 0;
+    const allQuestions = await database.getFormQuestions(interaction.guildId);
+    const remainingQuestions = allQuestions.slice(startIndex + 5);
+    
+    const modal = new ModalBuilder()
+        .setCustomId(`form_modal:${startIndex}`)
+        .setTitle(`Formulário ${allQuestions.length > 5 ? `(Parte ${Math.floor(startIndex / 5) + 1})` : ''}`);
 
-        // Enviar perguntas por DM
-        let answers = [];
-        
-        for (let i = 0; i < questions.length; i++) {
-            const question = questions[i];
-            
-            try {
-                await interaction.user.send(`**Pergunta ${i + 1}/${questions.length}:**\n${question.question}\n\n*Responda esta mensagem com sua resposta:*`);
-                
-                // Aguardar resposta
-                const filter = m => m.author.id === interaction.user.id;
-                const collected = await interaction.user.dmChannel.awaitMessages({
-                    filter,
-                    max: 1,
-                    time: 300000, // 5 minutos
-                    errors: ['time']
-                });
+    // Adicionar campos de input para cada pergunta
+    questions.forEach((question, index) => {
+        const input = new TextInputBuilder()
+            .setCustomId(`question_${question.id}`)
+            .setLabel(`${startIndex + index + 1}. ${question.question.substring(0, 45)}`)
+            .setStyle(TextInputStyle.Paragraph)
+            .setPlaceholder('Digite sua resposta aqui...')
+            .setRequired(true)
+            .setMaxLength(1000);
 
-                const answer = collected.first().content;
-                answers.push(`**${question.question}**\n${answer}`);
-                
-                // Salvar resposta no banco
-                await database.addAnswer(submissionId, question.id, answer);
-                
-            } catch (dmError) {
-                console.error('Erro ao enviar pergunta por DM:', dmError);
-                const errorEmbed = createErrorEmbed(
-                    'Erro de DM',
-                    'Não foi possível enviar as perguntas por DM. Certifique-se de que suas DMs estão abertas.'
-                );
-                return interaction.editReply({ embeds: [errorEmbed] });
-            }
-        }
+        const row = new ActionRowBuilder().addComponents(input);
+        modal.addComponents(row);
+    });
 
-        // Enviar confirmação ao usuário
-        await interaction.user.send('✅ **Formulário enviado com sucesso!** Aguarde a análise dos administradores.');
-        
-        // Enviar para categoria de logs
-        const config = await database.getServerConfig(interaction.guildId);
-        const logCategory = interaction.guild.channels.cache.get(config.log_category_id);
-        
-        if (logCategory) {
-            // Encontrar um canal de texto na categoria
-            const logChannel = logCategory.children.cache.find(ch => ch.isTextBased());
-            
-            if (logChannel) {
-                const submissionEmbed = createSubmissionEmbed(
-                    interaction.user,
-                    answers.join('\n\n'),
-                    submissionId
-                );
-
-                const approveButton = new ButtonBuilder()
-                    .setCustomId(`approve_submission:${submissionId}`)
-                    .setLabel('Aprovar')
-                    .setEmoji('✅')
-                    .setStyle(ButtonStyle.Success);
-
-                const rejectButton = new ButtonBuilder()
-                    .setCustomId(`reject_submission:${submissionId}`)
-                    .setLabel('Reprovar')
-                    .setEmoji('❌')
-                    .setStyle(ButtonStyle.Danger);
-
-                const row = new ActionRowBuilder().addComponents(approveButton, rejectButton);
-
-                await logChannel.send({
-                    embeds: [submissionEmbed],
-                    components: [row]
-                });
-            }
-        }
-
-        const successEmbed = createSuccessEmbed(
-            'Formulário Enviado',
-            'Seu formulário foi enviado com sucesso! Você receberá uma resposta em breve.'
-        );
-        await interaction.editReply({ embeds: [successEmbed] });
-
-    } catch (error) {
-        if (error.message.includes('time')) {
-            await interaction.user.send('❌ **Tempo esgotado!** O formulário foi cancelado. Tente novamente.');
-        }
-        
-        console.error('Erro ao processar formulário:', error);
-        const errorEmbed = createErrorEmbed(
-            'Erro no Formulário',
-            'Ocorreu um erro ao processar seu formulário. Tente novamente mais tarde.'
-        );
-        await interaction.editReply({ embeds: [errorEmbed] });
+    if (isFirstModal) {
+        await interaction.showModal(modal);
+    } else {
+        await interaction.reply({ content: 'Continuando o formulário...', ephemeral: true });
+        await interaction.showModal(modal);
     }
 }
 
