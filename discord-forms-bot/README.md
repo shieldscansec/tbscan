@@ -57,9 +57,6 @@ Edite o arquivo `.env`:
 DISCORD_TOKEN=seu_token_do_bot_aqui
 CLIENT_ID=id_da_aplicacao_aqui
 
-# Database Configuration
-DATABASE_URL=./database/forms.db
-
 # Optional: Set to 'development' for additional logging
 NODE_ENV=production
 ```
@@ -135,14 +132,17 @@ Execute o comando `/painel-perguntasghost` para abrir o painel de configuração
 |---------|-----------|-----------|
 | `/painel-perguntasghost` | Abre o painel de configuração | Admin ou Gestor de Formulários |
 
-## 🗄️ Estrutura do Banco de Dados
+## 🗄️ Armazenamento de Dados
 
-O bot usa **better-sqlite3** (compatível com Termux) com as seguintes tabelas:
+O bot usa **armazenamento JSON simples** (sem dependências SQL) com a seguinte estrutura:
 
-- **server_configs**: Configurações por servidor
-- **form_questions**: Perguntas dos formulários
-- **form_submissions**: Submissões dos usuários
-- **form_answers**: Respostas individuais
+- **serverConfigs**: Configurações por servidor
+- **formQuestions**: Perguntas dos formulários
+- **formSubmissions**: Submissões dos usuários
+- **formAnswers**: Respostas individuais
+- **nextIds**: Controle de IDs incrementais
+
+Os dados são salvos automaticamente em `database/forms.json` com backups opcionais.
 
 ## 🔧 Scripts Disponíveis
 
@@ -179,8 +179,12 @@ discord-forms-bot/
 └── README.md
 ```
 
-## 🛡️ Segurança
+## 🛡️ Vantagens do Sistema
 
+- ✅ **Ultra leve** - Sem dependências SQL complexas
+- ✅ **Instalação simples** - Funciona em qualquer ambiente
+- ✅ **Armazenamento JSON** - Dados legíveis e editáveis
+- ✅ **Backups automáticos** - Sistema de backup integrado
 - ✅ **Validação de permissões** em todas as interações
 - ✅ **Sanitização de dados** de entrada
 - ✅ **Tratamento de erros** robusto

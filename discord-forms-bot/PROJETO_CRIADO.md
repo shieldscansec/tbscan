@@ -60,7 +60,7 @@ discord-forms-bot/
 
 ### 🛠️ Tecnologias Utilizadas
 - **Discord.js v14.14.1** - Biblioteca principal
-- **better-sqlite3** - Banco de dados rápido e compatível com Termux
+- **Sistema JSON** - Armazenamento leve sem dependências SQL
 - **Node.js ES Modules** - Módulos modernos
 - **Application Commands** - Slash commands oficiais
 - **Button Interactions** - Interface moderna
