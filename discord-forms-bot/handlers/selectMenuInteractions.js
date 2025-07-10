@@ -70,11 +70,8 @@ async function handleSelectLogCategory(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta e privada
-        await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Categoria **${category.name}** configurada para logs!`, 
-            ephemeral: true 
-        });
+        // Resposta silenciosa - apenas confirma a ação
+        await interaction.deferUpdate();
         
     } catch (error) {
         console.error('Erro ao configurar categoria:', error);
@@ -82,7 +79,9 @@ async function handleSelectLogCategory(interaction) {
             'Erro de Configuração',
             `${CONFIG.EMOJIS.ERROR} Não foi possível salvar a categoria. Tente novamente.`
         );
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        }
     }
 }
 
@@ -112,11 +111,8 @@ async function handleSelectApprovedRole(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta e privada
-        await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **@${role.name}** configurado para aprovados!`, 
-            ephemeral: true 
-        });
+        // Resposta silenciosa - apenas confirma a ação
+        await interaction.deferUpdate();
         
     } catch (error) {
         console.error('Erro ao configurar cargo aprovado:', error);
@@ -124,7 +120,9 @@ async function handleSelectApprovedRole(interaction) {
             'Erro de Configuração',
             `${CONFIG.EMOJIS.ERROR} Não foi possível salvar o cargo. Tente novamente.`
         );
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        }
     }
 }
 
@@ -154,11 +152,8 @@ async function handleSelectRejectedRole(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta e privada
-        await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Cargo **@${role.name}** configurado para reprovados!`, 
-            ephemeral: true 
-        });
+        // Resposta silenciosa - apenas confirma a ação
+        await interaction.deferUpdate();
         
     } catch (error) {
         console.error('Erro ao configurar cargo reprovado:', error);
@@ -166,7 +161,9 @@ async function handleSelectRejectedRole(interaction) {
             'Erro de Configuração',
             `${CONFIG.EMOJIS.ERROR} Não foi possível salvar o cargo. Tente novamente.`
         );
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        }
     }
 }
 
@@ -200,15 +197,8 @@ async function handleSelectQuestionToRemove(interaction) {
         // Invalidar cache para forçar atualização
         cache.invalidateServerCache(interaction.guildId);
         
-        // Resposta discreta
-        const truncatedQuestion = questionToRemove.question.length > 50 
-            ? `${questionToRemove.question.substring(0, 50)}...` 
-            : questionToRemove.question;
-        
-        await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Pergunta removida: "${truncatedQuestion}"`, 
-            ephemeral: true 
-        });
+        // Resposta silenciosa - apenas confirma a ação
+        await interaction.deferUpdate();
         
     } catch (error) {
         console.error('Erro ao remover pergunta:', error);
@@ -216,6 +206,8 @@ async function handleSelectQuestionToRemove(interaction) {
             'Erro de Banco de Dados',
             'Não foi possível remover a pergunta. Tente novamente.'
         );
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        }
     }
 }

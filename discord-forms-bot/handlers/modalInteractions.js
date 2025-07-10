@@ -57,11 +57,9 @@ async function handleAddQuestionModal(interaction) {
             cache.invalidateServerCache(interaction.guildId);
         }
         
-        // Resposta discreta
-        await interaction.reply({ 
-            content: `${CONFIG.EMOJIS.SUCCESS} Pergunta adicionada: "${questionText.length > 50 ? questionText.substring(0, 50) + '...' : questionText}"`, 
-            ephemeral: true 
-        });
+        // Resposta silenciosa - apenas confirma a ação
+        await interaction.deferReply({ ephemeral: true });
+        await interaction.deleteReply();
         
     } catch (error) {
         console.error('Erro ao adicionar pergunta:', error);
@@ -69,7 +67,9 @@ async function handleAddQuestionModal(interaction) {
             'Erro de Banco de Dados',
             `${CONFIG.EMOJIS.ERROR} Não foi possível adicionar a pergunta.\n\n${CONFIG.EMOJIS.INFO} Tente novamente ou entre em contato com o suporte.`
         );
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        if (!interaction.replied && !interaction.deferred) {
+            await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+        }
     }
 }
 
@@ -217,7 +217,7 @@ async function finalizeSubmission(interaction, submissionId) {
             }
         }
 
-        // Resposta discreta
+        // Resposta silenciosa - apenas confirma a ação
         await interaction.reply({ 
             content: `${CONFIG.EMOJIS.SUCCESS} **Formulário enviado!** Aguarde a análise da equipe.`, 
             ephemeral: true 
