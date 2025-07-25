@@ -1,0 +1,283 @@
+# MCForceScanner-Pro - Configuração Padrão
+# ===========================================
+
+# Configurações do Scanner
+scanner:
+  # Configurações de performance
+  threads: 50                    # Número de threads para operações paralelas
+  timeout: 10                    # Timeout em segundos para conexões
+  delay: 0.1                     # Delay entre requests (segundos)
+  retries: 3                     # Número de tentativas em caso de falha
+  
+  # Configurações de stealth
+  stealth_mode: false            # Ativa modo stealth (mais lento, menos detectável)
+  user_agent: "MCForceScanner-Pro/1.0"
+  random_delay: true             # Adiciona delay aleatório entre requests
+  
+  # Configurações de proxy
+  proxy:
+    enabled: false
+    type: "http"                 # http, socks4, socks5
+    host: "127.0.0.1"
+    port: 8080
+    username: null
+    password: null
+
+# Configurações de Rede
+network:
+  # Configurações de descoberta
+  discovery:
+    enabled: true
+    port_range: "25565-25575"    # Range de portas para scan
+    common_ports: [25565, 25566, 25567, 25568, 25569]
+    
+  # Configurações de DNS
+  dns:
+    servers: ["8.8.8.8", "1.1.1.1"]
+    timeout: 5
+    
+  # Configurações de ping
+  ping:
+    enabled: true
+    timeout: 3
+    count: 3
+
+# Configurações de Exploits
+exploits:
+  # Exploits habilitados por padrão
+  enabled:
+    - "version_scan"
+    - "motd_scan"
+    - "player_enum"
+    - "plugin_enum"
+    - "auth_bypass"
+    - "rcon_scan"
+    - "query_scan"
+    
+  # Configurações específicas por exploit
+  auth_bypass:
+    wordlists:
+      usernames: "./wordlists/usernames.txt"
+      passwords: "./wordlists/passwords.txt"
+    max_attempts: 1000
+    delay_between_attempts: 0.5
+    
+  brute_force:
+    enabled: false               # Desabilitado por padrão por segurança
+    max_attempts: 100
+    delay: 1.0
+    
+  rcon:
+    common_passwords: ["admin", "password", "123456", "minecraft"]
+    port: 25575
+
+# Configurações de Targets
+targets:
+  # Targets padrão (exemplo)
+  default:
+    - host: "minecraft.example.com"
+      port: 25565
+      description: "Servidor de exemplo"
+      
+  # Configurações de importação
+  import:
+    from_file: null              # Caminho para arquivo com lista de targets
+    format: "txt"                # txt, csv, json
+    
+  # Configurações de validação
+  validation:
+    check_connectivity: true
+    resolve_dns: true
+
+# Configurações de Relatórios
+reports:
+  # Formatos de saída
+  formats: ["json", "html", "txt"]
+  
+  # Diretório de saída
+  output_dir: "./results"
+  
+  # Configurações de PDF
+  pdf:
+    enabled: false               # Requer dependências extras
+    template: "default"
+    include_graphs: true
+    
+  # Configurações de HTML
+  html:
+    template: "modern"
+    include_css: true
+    interactive: true
+    
+  # Configurações de exportação
+  export:
+    compress: true
+    encryption: false
+    password: null
+
+# Configurações do Banco de Dados
+database:
+  # Tipo de banco (sqlite, postgresql, mysql)
+  type: "sqlite"
+  
+  # Configurações do SQLite
+  sqlite:
+    path: "./data/mcforcescanner.db"
+    
+  # Configurações do PostgreSQL (se habilitado)
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "mcforcescanner"
+    username: "mcfs_user"
+    password: "secure_password"
+    
+  # Configurações gerais
+  pool_size: 10
+  max_overflow: 20
+  echo: false                    # Log de queries SQL
+
+# Configurações de Logging
+logging:
+  # Nível de log
+  level: "INFO"                  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  
+  # Configurações de arquivo
+  file:
+    enabled: true
+    path: "./logs/mcforcescanner.log"
+    max_size: "10MB"
+    backup_count: 5
+    rotation: "daily"
+    
+  # Configurações de console
+  console:
+    enabled: true
+    colored: true
+    format: "rich"               # simple, detailed, rich
+    
+  # Logs específicos
+  modules:
+    network: "INFO"
+    exploits: "INFO"
+    database: "WARNING"
+    api: "INFO"
+
+# Configurações da API
+api:
+  # Configurações do servidor
+  host: "127.0.0.1"
+  port: 8000
+  debug: false
+  
+  # Configurações de segurança
+  security:
+    cors_enabled: true
+    cors_origins: ["http://localhost:3000"]
+    rate_limiting: true
+    max_requests_per_minute: 100
+    
+  # Configurações de autenticação
+  auth:
+    enabled: false
+    secret_key: "your-secret-key-here"
+    algorithm: "HS256"
+    access_token_expire_minutes: 30
+    
+  # Configurações de documentação
+  docs:
+    enabled: true
+    swagger_ui: true
+    redoc: true
+
+# Configurações de Plugins
+plugins:
+  # Diretórios de plugins
+  directories:
+    - "./plugins"
+    - "./custom_plugins"
+    
+  # Plugins habilitados
+  enabled: []
+  
+  # Configurações de carregamento
+  auto_load: true
+  reload_on_change: false        # Para desenvolvimento
+  
+  # Configurações de segurança
+  security:
+    validate_signature: false
+    allowed_imports: ["mcforcescanner", "asyncio", "aiohttp", "json"]
+
+# Configurações de Cache
+cache:
+  # Configurações gerais
+  enabled: true
+  ttl: 3600                      # Time to live em segundos
+  
+  # Configurações de Redis (se habilitado)
+  redis:
+    enabled: false
+    host: "localhost"
+    port: 6379
+    database: 0
+    password: null
+    
+  # Cache em memória
+  memory:
+    max_size: 1000               # Máximo de itens em cache
+
+# Configurações de Notificações
+notifications:
+  # Discord webhook
+  discord:
+    enabled: false
+    webhook_url: null
+    
+  # Telegram bot
+  telegram:
+    enabled: false
+    bot_token: null
+    chat_id: null
+    
+  # Email
+  email:
+    enabled: false
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    username: null
+    password: null
+    from_email: null
+    to_emails: []
+
+# Configurações de Desenvolvimento
+development:
+  # Configurações de debug
+  debug: false
+  profiling: false
+  
+  # Configurações de teste
+  testing:
+    mock_network: false
+    test_data_dir: "./tests/data"
+    
+  # Configurações de desenvolvimento
+  hot_reload: false
+  auto_format: true
+
+# Configurações Avançadas
+advanced:
+  # Configurações de memória
+  memory:
+    max_usage_mb: 1024
+    gc_threshold: 0.8
+    
+  # Configurações de CPU
+  cpu:
+    max_usage_percent: 80
+    priority: "normal"           # low, normal, high
+    
+  # Configurações de I/O
+  io:
+    max_open_files: 1000
+    buffer_size: 8192
