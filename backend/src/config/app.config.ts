@@ -1,0 +1,35 @@
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('app', () => ({
+  name: 'SentinelCore',
+  version: '1.0.0',
+  description: 'Shield Scan Security - Advanced SA-MP Server Management Panel',
+  port: parseInt(process.env.PORT, 10) || 3001,
+  environment: process.env.NODE_ENV || 'development',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  apiPrefix: process.env.API_PREFIX || 'api/v1',
+  logLevel: process.env.LOG_LEVEL || 'info',
+  timezone: process.env.TZ || 'UTC',
+  defaultLanguage: process.env.DEFAULT_LANGUAGE || 'pt-BR',
+  supportedLanguages: (process.env.SUPPORTED_LANGUAGES || 'pt-BR,en-US').split(','),
+  maxServerInstances: parseInt(process.env.MAX_SERVER_INSTANCES, 10) || 100,
+  serverDataPath: process.env.SERVER_DATA_PATH || '/app/servers',
+  backupPath: process.env.BACKUP_PATH || '/app/backups',
+  logsPath: process.env.LOGS_PATH || '/app/logs',
+  uploadsPath: process.env.UPLOADS_PATH || '/app/uploads',
+  tempPath: process.env.TEMP_PATH || '/tmp/sentinelcore',
+  maintenance: {
+    enabled: process.env.MAINTENANCE_MODE === 'true',
+    message: process.env.MAINTENANCE_MESSAGE || 'Sistema em manutenção. Tente novamente em alguns minutos.',
+    allowedIps: process.env.MAINTENANCE_ALLOWED_IPS ? process.env.MAINTENANCE_ALLOWED_IPS.split(',') : [],
+  },
+  features: {
+    registration: process.env.FEATURE_REGISTRATION !== 'false',
+    twoFactorAuth: process.env.FEATURE_2FA !== 'false',
+    fileUpload: process.env.FEATURE_FILE_UPLOAD !== 'false',
+    serverConsole: process.env.FEATURE_SERVER_CONSOLE !== 'false',
+    backups: process.env.FEATURE_BACKUPS !== 'false',
+    monitoring: process.env.FEATURE_MONITORING !== 'false',
+    notifications: process.env.FEATURE_NOTIFICATIONS !== 'false',
+  },
+}));
