@@ -1,0 +1,94 @@
+# SentinelCore Prometheus Configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'sentinelcore-monitor'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # SentinelCore Backend
+  - job_name: 'sentinelcore-backend'
+    static_configs:
+      - targets: ['backend:3001']
+    metrics_path: '/api/v1/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  # SentinelCore Frontend (Nginx)
+  - job_name: 'sentinelcore-frontend'
+    static_configs:
+      - targets: ['nginx:8080']
+    metrics_path: '/nginx_status'
+    scrape_interval: 30s
+
+  # PostgreSQL Database
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['database:5432']
+    scrape_interval: 30s
+
+  # Redis Cache
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+
+  # Node Exporter (System metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Docker containers
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+
+  # SA-MP Servers (dynamic discovery)
+  - job_name: 'samp-servers'
+    file_sd_configs:
+      - files:
+        - '/etc/prometheus/samp_servers.json'
+        refresh_interval: 30s
+    scrape_interval: 15s
+    metrics_path: '/metrics'
+
+  # Custom application metrics
+  - job_name: 'sentinelcore-custom'
+    static_configs:
+      - targets: ['backend:3001']
+    metrics_path: '/api/v1/metrics/custom'
+    scrape_interval: 30s
+    params:
+      format: ['prometheus']
+
+# Remote write configuration (optional)
+# remote_write:
+#   - url: "https://your-remote-storage/api/v1/write"
+#     basic_auth:
+#       username: "username"
+#       password: "password"
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 15d
+    retention.size: 10GB
