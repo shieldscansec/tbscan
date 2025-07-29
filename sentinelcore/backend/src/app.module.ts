@@ -10,16 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ServersModule } from './modules/servers/servers.module';
 import { FilesModule } from './modules/files/files.module';
-import { LogsModule } from './modules/logs/logs.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { WebsocketModule } from './modules/websocket/websocket.module';
-import { SecurityModule } from './modules/security/security.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
-
-// Common modules
-import { DatabaseModule } from './common/database/database.module';
-import { LoggerModule } from './common/logger/logger.module';
-import { CacheModule } from './common/cache/cache.module';
+import { WebSocketModule } from './modules/websocket/websocket.module';
 
 // Configuration
 import databaseConfig from './config/database.config';
@@ -81,18 +72,11 @@ import appConfig from './config/app.config';
     }),
 
     // Core modules
-    DatabaseModule,
-    LoggerModule,
-    CacheModule,
-    SecurityModule,
     AuthModule,
     UsersModule,
     ServersModule,
     FilesModule,
-    LogsModule,
-    AdminModule,
-    WebsocketModule,
-    NotificationsModule,
+    WebSocketModule,
   ],
   controllers: [],
   providers: [],
