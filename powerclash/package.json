@@ -1,0 +1,84 @@
+{
+  "name": "powerclash",
+  "version": "1.0.0",
+  "description": "Sistema Avançado de Detecção de Cheats para Dispositivos Móveis",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd web-panel && npm start",
+    "android:build": "cd android-app && ./gradlew assembleDebug",
+    "android:install": "cd android-app && ./gradlew installDebug",
+    "install:all": "npm install && cd backend && npm install && cd ../web-panel && npm install",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd web-panel && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd web-panel && npm test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd web-panel && npm run lint",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "deploy:prod": "npm run build:all && npm run docker:up",
+    "monitor": "node scripts/monitoring/health-check.js"
+  },
+  "keywords": [
+    "anti-cheat",
+    "android",
+    "security",
+    "gaming",
+    "esports",
+    "detection",
+    "mobile",
+    "real-time"
+  ],
+  "author": "PowerClash Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/powerclash/detector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/powerclash/detector/issues"
+  },
+  "homepage": "https://powerclash.com",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.0.2",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "workspaces": [
+    "backend",
+    "web-panel",
+    "shared"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
